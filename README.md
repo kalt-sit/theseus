@@ -2,6 +2,8 @@
 
 English | [日本語](README.ja.md)
 
+**Audit third-party agent skills before installation and detect tampering without spending LLM tokens.**
+
 Theseus is a Hermes Agent skill for handling prompt injection and reviewing third-party skills before installation. It treats the documents and code under review as untrusted data, not as instructions. It does not require an external model or API.
 
 > [!IMPORTANT]
