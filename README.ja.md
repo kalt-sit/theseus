@@ -9,7 +9,7 @@ Theseusは、プロンプトインジェクションへの対処と、サード�
 
 ## 含まれるもの
 
-このリポジトリにはTheseus本体だけを収録しています。ほかのSkillのソースコードは含まれていません。
+このリポジトリにはTheseus本体だけを収録しています。
 
 ```text
 SKILL.md
@@ -48,14 +48,12 @@ GitのHEADと外部ピンを照合する初期設定と、LLMを使わない日�
 
 ### 通知先
 
-TheseusがDiscordへ直接送信するわけではありません。通知先はHermes cronの`deliver`設定で選びます。
+通知先はHermes cronの`deliver`設定で選びます。
 
 - `origin`: cronを作成したDiscord、Slack、Telegramなどのチャットへ返す
 - `local`: メッセージサービスを使わず、Hermesのローカル出力へ保存する
 - `discord`、`slack`、`telegram`など: Hermesで設定済みの各ホームチャンネルへ送る
 - `all`: Hermesへ接続済みの全ホームチャンネルへ送る
-
-DiscordやSlackは必須ではありません。外部サービスを使わない場合は`local`を選べます。外部サービスへ通知する場合は、そのサービスを先にHermesへ接続してください。Theseusは接続設定や認証情報を同梱しません。
 
 ## セキュリティ上の注意
 
