@@ -9,7 +9,7 @@ Theseus is a Hermes Agent skill for handling prompt injection and reviewing thir
 
 ## What's included
 
-This repository contains Theseus only. It does not bundle the source code of other skills.
+This repository contains Theseus only.
 
 ```text
 SKILL.md
@@ -48,14 +48,12 @@ See [`references/cron-setup.md`](references/cron-setup.md) for the initial setup
 
 ### Notification targets
 
-Theseus does not send messages directly to Discord. Hermes cron selects the destination through its `deliver` setting.
+Hermes cron selects the destination through its `deliver` setting.
 
 - `origin`: return the result to the Discord, Slack, Telegram, or other chat where the cron job was created
 - `local`: store the output locally in Hermes without using a messaging service
 - `discord`, `slack`, `telegram`, and similar targets: send to a home channel already configured in Hermes
 - `all`: send to every home channel connected to Hermes
-
-Discord and Slack are optional. Use `local` if you do not want to connect a messaging service. To send notifications through an external service, connect that service to Hermes first. Theseus does not include connection settings or credentials.
 
 ## Security notes
 
