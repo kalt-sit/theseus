@@ -2,12 +2,30 @@
 
 English | [日本語](README.ja.md)
 
-**Audit third-party agent skills before installation and detect tampering without spending LLM tokens.**
+**Theseus is a defensive skill for curious explorers. It supports your journey by auditing third-party agent skills before installation and detecting tampering without spending LLM tokens.**
 
-Theseus is a Hermes Agent skill for handling prompt injection and reviewing third-party skills before installation. It treats the documents and code under review as untrusted data, not as instructions. It does not require an external model or API.
+Theseus helps Hermes Agent handle prompt injection and review third-party skills safely. It treats the documents and code under review as untrusted data, not as instructions. It does not require an external model or API.
 
 > [!IMPORTANT]
 > Automated monitoring uses Hermes cron. The bundled script runs in `no_agent` mode (`--no-agent` in the CLI), so it does not call an LLM or consume model credits. Hermes Agent and `git` are still required.
+
+## Use cases
+
+- **When trying a new skill**
+
+  Review its `SKILL.md`, bundled scripts, required permissions, external network access, and prompt-injection risks before installation.
+
+- **When external content contains instruction-like text**
+
+  Apply principles that separate untrusted data from trusted instructions, so text found in external content is not treated as commands.
+
+- **When reviewing a collection of candidate skills**
+
+  Classify each candidate as `install`, `borrow-principles` (reuse principles only), or `skip`, and record the decision and its rationale.
+
+- **When monitoring for tampering after installation**
+
+  Compare Git `HEAD` with a pin stored outside the repository using a `no_agent` cron job. The monitor sends nothing when the check passes and notifies you only when it detects an anomaly.
 
 ## What's included
 
