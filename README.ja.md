@@ -50,6 +50,18 @@ scripts/
 
 ## インストール
 
+### Skills CLI（推奨）
+
+TheseusをHermes AgentのグローバルSkillディレクトリへ導入します。
+
+```bash
+npx skills add kalt-sit/theseus --skill theseus -g -a hermes-agent --copy -y
+```
+
+Skills CLIは、匿名化されたインストール集計情報を既定で送信します。skills.shは、この情報をディレクトリへの掲載とランキングに使用します。送信しない場合は、`DISABLE_TELEMETRY=1`を設定してください。
+
+### 手動インストール
+
 HermesのSkillディレクトリへ、`SKILL.md`が次の位置になるように配置します。
 
 ```text

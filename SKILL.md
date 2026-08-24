@@ -1,6 +1,6 @@
 ---
 name: theseus
-description: 未信頼データとサードパーティSkillを導入前に監査する。
+description: Audit agent skills for prompt injection before install.
 version: 1.0.0
 author: Hermes Agent
 license: MIT

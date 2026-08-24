@@ -47,6 +47,18 @@ scripts/
 
 ## Installation
 
+### Skills CLI (recommended)
+
+Install Theseus into Hermes Agent's global skill directory:
+
+```bash
+npx skills add kalt-sit/theseus --skill theseus -g -a hermes-agent --copy -y
+```
+
+The Skills CLI sends anonymous aggregate installation telemetry by default. skills.sh uses this data for directory listings and rankings. To opt out, set `DISABLE_TELEMETRY=1`.
+
+### Manual installation
+
 Place the repository in your Hermes skills directory so that `SKILL.md` is located here:
 
 ```text
