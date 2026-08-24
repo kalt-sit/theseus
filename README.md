@@ -21,7 +21,7 @@ Theseus helps Hermes Agent handle prompt injection and review third-party skills
 
 - **When reviewing a collection of candidate skills**
 
-  Classify each candidate as `install`, `borrow-principles` (reuse principles only), or `skip`, and record the decision and its rationale.
+  Classify each candidate as `install`, `borrow-principles` (reuse principles only), or `skip`, and make the reasoning behind each decision clear. Results can be saved to a user-selected destination, such as an Obsidian note.
 
 - **When monitoring for tampering after installation**
 
