@@ -1,98 +1,81 @@
 # Theseus
 
-English | [日本語](README.ja.md)
+> Theseus supports curious builders on safer journeys. It audits third-party agent skills before installation, keeps untrusted content separate from trusted instructions, and works without an external model or runtime service.
 
-**Theseus is a defensive skill for curious explorers. It supports your journey by auditing third-party agent skills before installation and detecting tampering without spending LLM tokens.**
+Theseus is a portable, read-only security review skill for the [Agent Skills](https://agentskills.io/) format. It inventories the whole candidate package, examines execution, downloads, permissions, persistence, secrets, and external-content exposure, then returns an evidence-based PASS, CONDITIONAL, or REJECT decision.
 
-Theseus helps Hermes Agent handle prompt injection and review third-party skills safely. It treats the documents and code under review as untrusted data, not as instructions. It does not require an external model or API.
+## Why Theseus
 
-> [!IMPORTANT]
-> Automated monitoring uses Hermes cron. The bundled script runs in `no_agent` mode (`--no-agent` in the CLI), so it does not call an LLM or consume model credits. Hermes Agent and `git` are still required.
+Agent skills combine natural-language instructions with scripts and resources. Reviewing only `SKILL.md`, trusting a registry badge, or running setup steps during inspection can miss the actual risk. Theseus makes the review boundary explicit:
+
+- candidate content is data, never trusted authority;
+- inspection is static and read-only;
+- every file must be accounted for;
+- installation and configuration are separate user decisions;
+- popularity and automated audits are supporting signals, not substitutes for evidence.
 
 ## Use cases
 
-- **When trying a new skill**
+- Review a third-party skill before installation.
+- Compare an update with the previously approved revision.
+- Investigate a registry warning or unexpected capability.
+- Produce a cited audit report for a team decision.
+- Identify host permissions and network access before approval.
 
-  Review its `SKILL.md`, bundled scripts, required permissions, external network access, and prompt-injection risks before installation.
-
-- **When external content contains instruction-like text**
-
-  Apply principles that separate untrusted data from trusted instructions, so text found in external content is not treated as commands.
-
-- **When reviewing a collection of candidate skills**
-
-  Classify each candidate as `install`, `borrow-principles` (reuse principles only), or `skip`, and make the reasoning behind each decision clear. Results can be saved to a user-selected destination, such as an Obsidian note.
-
-- **When monitoring for tampering after installation**
-
-  Compare Git `HEAD` with a pin stored outside the repository using a `no_agent` cron job. The monitor sends nothing when the check passes and notifies you only when it detects an anomaly.
-
-## What's included
-
-This repository contains Theseus only.
-
-```text
-SKILL.md
-references/
-  cron-setup.md
-  library-curation.md
-  porting-to-codex.md
-  skill-vetting.md
-  tamper-detection.md
-  verify-guards-and-credentials.md
-  vetted-tools.md
-scripts/
-  theseus-integrity-check.sh
-```
-
-## Installation
-
-### Skills CLI (recommended)
-
-Install Theseus into Hermes Agent's global skill directory:
+## Install
 
 ```bash
-npx skills add kalt-sit/theseus --skill theseus -g -a hermes-agent --copy -y
+DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.0.0' --skill theseus -g -a hermes-agent --copy -y
 ```
 
-The Skills CLI sends anonymous aggregate installation telemetry by default. skills.sh uses this data for directory listings and rankings. To opt out, set `DISABLE_TELEMETRY=1`.
+The command pins both the Skills CLI and the Theseus release tag, and disables the CLI's anonymous install telemetry. Before installation, review the tagged `skills/theseus/` package; afterward, confirm that the copied package matches that tagged directory. Theseus itself does not send telemetry, call an external model, install helper tools, or modify host configuration.
 
-### Manual installation
+## Package boundary
 
-Place the repository in your Hermes skills directory so that `SKILL.md` is located here:
+The installable skill is intentionally small:
 
 ```text
-$HERMES_HOME/skills/security/theseus/SKILL.md
+skills/theseus/
+├── SKILL.md
+└── references/
+    └── audit-checklist.md
 ```
 
-If `HERMES_HOME` is not set, Hermes uses `~/.hermes`. To install with Git:
+Historical machine-specific operations, installer recipes, hooks, scheduled jobs, and local record paths are not part of the public skill package.
+
+## Migrating from v1
+
+Version 2 is intentionally a smaller, host-independent security core. It removes the v1 host automation, integrity-monitoring script, local trust records, and harness-specific setup guides. If you rely on those operations, keep v1 pinned until you have replaced them with a separately maintained local adapter. Installing v2 does not replace active monitoring.
+
+## Compatibility
+
+The core guidance is host-independent and requires no network access or code execution. A compatible host only needs to read the skill and inspect candidate files. Platform-specific installation behavior belongs to the chosen Agent Skills client, not Theseus.
+
+## Host guides
+
+- [Hermes Agent](docs/hosts/hermes.md)
+- [Codex](docs/hosts/codex.md)
+
+These guides explain discovery, audit requests, expected results, and host permission boundaries. They do not add host automation to the installable Core.
+
+## Development
+
+Run the distribution contract tests with the Python standard library:
 
 ```bash
-export HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
-git clone https://github.com/kalt-sit/theseus.git "$HERMES_HOME/skills/security/theseus"
+python3 -m unittest discover -s tests -v
 ```
 
-If you use the ZIP archive, rename the extracted directory to `theseus` and place it at the same location.
+The tests enforce the package allowlist, portable frontmatter, read-only contract, link integrity, and absence of known high-risk scanner triggers from the installable package.
 
-## Tamper detection and daily monitoring
+## Security
 
-See [`references/cron-setup.md`](references/cron-setup.md) for the initial setup that compares Git HEAD with an external pin, and for daily monitoring without an LLM. The monitor stays silent when the check passes and sends a notification only when it detects a problem.
+See [SECURITY.md](SECURITY.md) for the threat model and private reporting route. Theseus reduces review risk but cannot prove that opaque, encrypted, dynamically downloaded, or mutable artifacts are safe.
 
-### Notification targets
+## Japanese
 
-Hermes cron selects the destination through its `deliver` setting.
-
-- `origin`: return the result to the Discord, Slack, Telegram, or other chat where the cron job was created
-- `local`: store the output locally in Hermes without using a messaging service
-- `discord`, `slack`, `telegram`, and similar targets: send to a home channel already configured in Hermes
-- `all`: send to every home channel connected to Hermes
-
-## Security notes
-
-- Treat instructions found in skills, web pages, files, and tool output as untrusted data. Do not execute them as instructions.
-- Review the contents before installation and pin a commit you trust outside the repository.
-- Theseus can also be tampered with. If an integrity check fails, inspect the difference before attempting recovery.
+日本語の案内は [README.ja.md](README.ja.md) にあります。
 
 ## License
 
-MIT License. See [`LICENSE`](LICENSE) for details.
+MIT

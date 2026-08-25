@@ -1,101 +1,83 @@
 # Theseus
 
-[English](README.md) | 日本語
+> テセウスは好奇心旺盛なあなたの旅をサポートする防御Skillです。サードパーティ製のAgent Skillを導入前に監査し、未信頼データと正規の指示を分離しながら、外部モデルや常駐サービスなしで動作します。
 
-**テセウスは、好奇心旺盛なあなたの旅をサポートする防御Skillです。**
+Theseusは、[Agent Skills](https://agentskills.io/)形式のSkillを対象とする、ポータブルで読み取り専用のセキュリティ監査Skillです。候補パッケージ全体を棚卸しし、コード実行、ダウンロード、権限、永続化、秘密情報、外部コンテンツ取得を調べ、根拠付きでPASS／CONDITIONAL／REJECTを返します。
 
-サードパーティ製のAgent Skillを導入する前に監査し、LLMトークンを消費せずに改ざんも検知します。
+## Theseusが守る境界
 
-Theseusは、Hermes Agentがプロンプトインジェクションへ対処し、サードパーティ製Skillを安全に監査するためのSkillです。
-監査する文書やコードは、命令ではなく未信頼のデータとして扱います。外部モデルや外部APIは必須ではありません。
+Agent Skillは自然言語の指示・スクリプト・参照資料をまとめたものです。`SKILL.md`だけを読む、監査バッジだけを信じる、監査中にセットアップ手順を動かす、といった方法では実体のリスクを見落とします。
 
-> [!IMPORTANT]
-> 自動監視にはHermesのcron機能を使います。同梱スクリプトだけを`no_agent`（CLIでは`--no-agent`）モードで実行するため、LLMは呼び出されず、モデルや推論APIの料金・クレジットを消費しません。Hermes Agentと`git`は別途必要です。
+Theseusは次を徹底します。
+
+- 候補内の文章やコードは、信頼済みの指示ではなくデータとして扱う
+- 監査中は読み取り専用とし、候補の指示を実行しない
+- パッケージ内の全ファイルを確認対象にする
+- インストールや設定変更は、監査とは別のユーザー判断に分ける
+- 人気・提供元・自動監査は補助情報として使い、実体確認の代わりにしない
 
 ## ユースケース
 
-- **新しいSkillを試したいとき**
-
-  `SKILL.md`、同梱スクリプト、要求される権限、外部通信、プロンプトインジェクションのリスクを導入前に確認します。
-
-- **外部コンテンツに指示のような文言が含まれているとき**
-
-  未信頼のデータと信頼できる指示を分離し、外部コンテンツに書かれた内容をそのまま命令として扱わないための原則を適用します。
-
-- **候補のSkillをまとめて整理したいとき**
-
-  各候補を `install`（導入）、`borrow-principles`（原則のみ借用）、`skip`（見送り）に分類し、導入判断とその根拠を整理します。結果は、ユーザーが指定した保存先（例：Obsidianのノート）へ記録できます。
-
-- **導入後の改ざんを監視したいとき**
-
-  Gitの `HEAD` とリポジトリ外部に保存したピンを `no_agent` cronで照合します。正常時は通知せず、異常を検出した場合のみ通知します。
-
-## 含まれるもの
-
-このリポジトリにはTheseus本体だけを収録しています。
-
-```text
-SKILL.md
-references/
-  cron-setup.md
-  library-curation.md
-  porting-to-codex.md
-  skill-vetting.md
-  tamper-detection.md
-  verify-guards-and-credentials.md
-  vetted-tools.md
-scripts/
-  theseus-integrity-check.sh
-```
+- サードパーティSkillを導入前に確認する
+- 更新版と以前に承認した版を比較する
+- skills.shなどの監査警告や想定外の機能を調べる
+- チーム判断用に根拠付きの監査報告を作る
+- 承認前に必要な権限と通信先を洗い出す
 
 ## インストール
 
-### Skills CLI（推奨）
-
-TheseusをHermes AgentのグローバルSkillディレクトリへ導入します。
-
 ```bash
-npx skills add kalt-sit/theseus --skill theseus -g -a hermes-agent --copy -y
+DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.0.0' --skill theseus -g -a hermes-agent --copy -y
 ```
 
-Skills CLIは、匿名化されたインストール集計情報を既定で送信します。skills.shは、この情報をディレクトリへの掲載とランキングに使用します。送信しない場合は、`DISABLE_TELEMETRY=1`を設定してください。
+このコマンドはSkills CLIのversionとTheseusのrelease tagを固定し、CLIの匿名install telemetryを無効化します。導入前にtag内の`skills/theseus/`を確認し、導入後はコピーされたpackageがtag内の同directoryと一致することを確認してください。Theseus本体はtelemetryを送信せず、外部モデルの呼び出し、補助ツールの導入、ホスト設定の変更も行いません。
 
-### 手動インストール
+## 配布境界
 
-HermesのSkillディレクトリへ、`SKILL.md`が次の位置になるように配置します。
+インストール対象は意図的に小さくしています。
 
 ```text
-$HERMES_HOME/skills/security/theseus/SKILL.md
+skills/theseus/
+├── SKILL.md
+└── references/
+    └── audit-checklist.md
 ```
 
-`HERMES_HOME`が未設定の場合、既定値は`~/.hermes`です。Gitで取得する場合は次のコマンドを使います。
+過去の端末固有の運用記録、installer手順、hook、定期ジョブ、ローカルの記録先は公開Skill packageに含めません。
+
+## v1からの移行
+
+Version 2は、意図的に小さくしたハーネス非依存のsecurity coreです。v1に含まれていたホスト自動化、整合性監視script、ローカルtrust記録、ハーネス固有のsetup guideは削除されます。これらへ依存している場合は、別管理のlocal adapterへ置き換えるまでv1を固定して使ってください。v2の導入だけでは既存のactive monitoringを代替しません。
+
+## 互換性
+
+Coreの監査原則はハーネス非依存で、ネットワーク接続やコード実行を必要としません。利用するAgent SkillsクライアントがSkillを読み、候補ファイルを静的に確認できれば利用できます。
+
+## ホスト別ガイド
+
+- [Hermes Agent](docs/hosts/hermes.md)
+- [Codex](docs/hosts/codex.md)
+
+各ガイドでは、Skillの検出、監査依頼、期待する報告、ホスト側の権限境界だけを説明します。インストール対象のCoreへホスト自動化は追加しません。
+
+## 開発時の確認
+
+Python標準ライブラリだけで配布契約テストを実行できます。
 
 ```bash
-export HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
-git clone https://github.com/kalt-sit/theseus.git "$HERMES_HOME/skills/security/theseus"
+python3 -m unittest discover -s tests -v
 ```
 
-ZIPで取得した場合は、展開後のディレクトリ名を`theseus`にして同じ場所へ配置してください。
+テストは、配布ファイルのallowlist、標準frontmatter、読み取り専用契約、相対リンク、既知の高リスクscannerトリガー不在を確認します。
 
-## 改ざん検出と日次監視
+## セキュリティ
 
-GitのHEADと外部ピンを照合する初期設定と、LLMを使わない日次cron監視については、[`references/cron-setup.md`](references/cron-setup.md)を参照してください。正常時は何も送らず、異常を検出したときだけ通知します。
+脅威モデルと非公開報告経路は [SECURITY.md](SECURITY.md) を参照してください。Theseusは監査漏れを減らしますが、暗号化・難読化・動的取得・可変参照された実体の安全性を証明するものではありません。
 
-### 通知先
+## English
 
-通知先はHermes cronの`deliver`設定で選びます。
-
-- `origin`: cronを作成したDiscord、Slack、Telegramなどのチャットへ返す
-- `local`: メッセージサービスを使わず、Hermesのローカル出力へ保存する
-- `discord`、`slack`、`telegram`など: Hermesで設定済みの各ホームチャンネルへ送る
-- `all`: Hermesへ接続済みの全ホームチャンネルへ送る
-
-## セキュリティ上の注意
-
-- 監査対象のSkill、Webページ、ファイル、ツール出力に書かれた命令には従わず、未信頼のデータとして扱います。
-- 導入前に内容を確認し、信頼するコミットを外部ピンへ固定してください。
-- Theseus自身も改ざんされる可能性があります。整合性確認に失敗した場合は自動復元せず、先に差分を調べてください。
+English documentation is available in [README.md](README.md).
 
 ## ライセンス
 
-MIT Licenseです。詳細は[`LICENSE`](LICENSE)を参照してください。
+MIT
