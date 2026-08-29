@@ -27,10 +27,10 @@ Theseusは次を徹底します。
 ## インストール
 
 ```bash
-DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.0.0' --skill theseus -g -a hermes-agent --copy -y
+DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.1.0' --skill theseus -g -a hermes-agent --copy -y
 ```
 
-このコマンドはSkills CLIのversionとTheseusのrelease tagを固定し、CLIの匿名install telemetryを無効化します。導入前にtag内の`skills/theseus/`を確認し、導入後はコピーされたpackageがtag内の同directoryと一致することを確認してください。Theseus本体はtelemetryを送信せず、外部モデルの呼び出し、補助ツールの導入、ホスト設定の変更も行いません。
+このコマンドはSkills CLIのversionとTheseusのrelease tagを固定し、CLIの匿名install telemetryを無効化します。導入前にGitHub Releaseが**Immutable**と表示されていることを確かめ、tag内の`skills/theseus/`を確認し、解決されたcommitとfile hashを記録してください。導入後は、コピーされたpackageがその記録済みbaselineと一致することを確認します。Theseus本体はtelemetryを送信せず、外部モデルの呼び出し、補助ツールの導入、ホスト設定の変更も行いません。
 
 ## 配布境界
 
@@ -38,6 +38,7 @@ DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.0.0' --skill thes
 
 ```text
 skills/theseus/
+├── LICENSE
 ├── SKILL.md
 └── references/
     └── audit-checklist.md
@@ -82,7 +83,7 @@ Version 2は、意図的に小さくしたハーネス非依存のsecurity core�
 
 ## 互換性
 
-Coreの監査原則はハーネス非依存で、ネットワーク接続やコード実行を必要としません。利用するAgent SkillsクライアントがSkillを読み、候補ファイルを静的に確認できれば利用できます。
+Coreの監査原則はハーネス非依存で、ネットワーク接続やコード実行を必要としません。利用するAgent SkillsクライアントがSkillを読み、候補ファイルを静的に確認できれば利用できます。Platform固有のinstall挙動は、Theseusではなく利用するAgent Skillsクライアントが担います。
 
 ## ホスト別ガイド
 

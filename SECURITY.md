@@ -22,7 +22,7 @@ Theseus is not a malware sandbox, runtime containment system, signature service,
 
 ## Reporting a vulnerability
 
-Use GitHub's private vulnerability reporting for this repository. Include:
+Use [GitHub's private vulnerability reporting form](https://github.com/kalt-sit/theseus/security/advisories/new) for this repository. Include:
 
 - affected version or immutable revision;
 - the smallest reproducible candidate package;

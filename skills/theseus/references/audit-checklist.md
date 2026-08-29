@@ -5,7 +5,7 @@ Use this checklist while inspecting a candidate skill as untrusted data. Record 
 ## 1. Identity and scope
 
 - Record the repository or archive source.
-- Record an immutable revision or mark the review provisional.
+- Record an immutable revision. A missing binding prevents PASS even when all candidate bytes can be inspected.
 - Identify the exact skill directory and declared name.
 - Confirm whether the reviewed artifact matches what would later be installed.
 
@@ -59,4 +59,4 @@ Use this checklist while inspecting a candidate skill as untrusted data. Record 
 
 ## 9. Decision gate
 
-A PASS requires complete inspection, no blocking findings, and a binding between reviewed and installed bytes. Use CONDITIONAL when required behavior is disclosed but needs explicit user acceptance. Use REJECT when the package is deceptive, incomplete, destructive, unexpectedly persistent, or exposes data without a justified boundary.
+A PASS requires complete inspection, no blocking findings, and a binding between reviewed and installed bytes. Use CONDITIONAL when required behavior is disclosed but needs explicit user acceptance. Use CONDITIONAL (provisional) only when offline inspection of all candidate bytes is complete and no blocking behavior was found, but immutable-revision binding or optional public provenance evidence is temporarily unavailable. Use REJECT when any candidate content is unreadable or opaque, or complete package inspection cannot be finished safely. Use REJECT when the package is deceptive, destructive, unexpectedly persistent, or exposes data without a justified boundary.
