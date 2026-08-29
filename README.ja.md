@@ -45,6 +45,21 @@ skills/theseus/
 
 過去の端末固有の運用記録、installer手順、hook、定期ジョブ、ローカルの記録先は公開Skill packageに含めません。
 
+## 継続的な確認
+
+Theseusは監査手順であり、監視サービスではありません。導入するだけでは、定期監査、Theseus自身の変更検知、将来のreleaseの自動承認は行われません。
+
+継続的に確認したい場合は、お使いのAgentへ手動監査を依頼するか、cronなどで導入済みpackageとGitHubの固定tagまたはcommitを定期的に比較してください。変更を検出した場合は、新しいrevisionを導入する前にAgentで再監査します。
+
+Theseusをrepository内で管理している場合は、GitHub Actionsで定期比較や変更検知を行うこともできます。こうした自動化は、利用環境と承認方針に合わせてお使いのAgentと一緒に構築してください。役割は次のように分かれます。
+
+- GitHubの固定revision：比較元となるartifact
+- Hermes、Claude Code、CodexなどのAgent：監査の実行
+- cron、CI、local adapter：比較を実行する時期の管理
+- 利用者：導入または置換の承認
+
+導入済みのTheseusだけに自身の安全性を判定させないでください。別に管理されたホスト側の仕組みから、固定した比較元との差分を確認します。
+
 ## v1からの移行
 
 Version 2は、意図的に小さくしたハーネス非依存のsecurity coreです。v1に含まれていたホスト自動化、整合性監視script、ローカルtrust記録、ハーネス固有のsetup guideは削除されます。これらへ依存している場合は、別管理のlocal adapterへ置き換えるまでv1を固定して使ってください。v2の導入だけでは既存のactive monitoringを代替しません。

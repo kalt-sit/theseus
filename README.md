@@ -43,6 +43,21 @@ skills/theseus/
 
 Historical machine-specific operations, installer recipes, hooks, scheduled jobs, and local record paths are not part of the public skill package.
 
+## Ongoing verification
+
+Theseus is an audit procedure, not a monitoring service. Installing it does not schedule recurring audits, check its own files for changes, or automatically approve future releases.
+
+For ongoing assurance, ask the agent you already use to perform a manual audit, or use cron or another local scheduler to periodically compare the installed package with an immutable GitHub tag or commit. If a change is detected, have the agent review the new revision before replacing the approved copy.
+
+If you keep Theseus in a repository, GitHub Actions can also run scheduled comparisons or detect upstream changes. Build this automation with your agent so that it matches your host and approval requirements. The roles remain separate:
+
+- the pinned GitHub revision is the reference artifact;
+- Hermes, Claude Code, Codex, or another capable agent performs the review;
+- cron, CI, or a local adapter decides when to run the comparison;
+- the user approves installation or replacement.
+
+Do not rely only on an installed copy of Theseus to certify itself. Compare it with the pinned reference through a separately controlled host mechanism.
+
 ## Migrating from v1
 
 Version 2 is intentionally a smaller, host-independent security core. It removes the v1 host automation, integrity-monitoring script, local trust records, and harness-specific setup guides. If you rely on those operations, keep v1 pinned until you have replaced them with a separately maintained local adapter. Installing v2 does not replace active monitoring.
