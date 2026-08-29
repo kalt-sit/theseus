@@ -75,10 +75,6 @@ For ongoing protection, add a small defensive baseline to the agent settings you
 
 This baseline reduces risk but does not make untrusted content safe. Keep write, execution, secret-access, and outbound communication permissions disabled when a research task does not need them.
 
-## Migrating from v1
-
-Version 2 is intentionally a smaller, host-independent security core. It removes the v1 host automation, integrity-monitoring script, local trust records, and harness-specific setup guides. If you rely on those operations, keep v1 pinned until you have replaced them with a separately maintained local adapter. Installing v2 does not replace active monitoring.
-
 ## Compatibility
 
 The core guidance is host-independent and requires no network access or code execution. A compatible host only needs to read the skill and inspect candidate files. Platform-specific installation behavior belongs to the chosen Agent Skills client, not Theseus.
