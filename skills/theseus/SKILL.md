@@ -79,6 +79,8 @@ Use one of these outcomes:
 
 Registry badges, popularity, and maintainer reputation are supporting signals only. They never replace inspection of the actual artifact.
 
+When a candidate is rejected or found to be over-privileged, the report may propose **capability extraction**: replacing it with a separately reviewed minimal adapter around a documented API. The proposal must remove unrelated dependencies, permissions, persistence, and execution capabilities. Do not build or install the adapter during the audit; treat it as a new artifact requiring separate user approval and review.
+
 ### 6. Report
 
 Return:
