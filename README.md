@@ -58,6 +58,10 @@ If you keep Theseus in a repository, GitHub Actions can also run scheduled compa
 
 Do not rely only on an installed copy of Theseus to certify itself. Compare it with the pinned reference through a separately controlled host mechanism.
 
+Keep integrity verification separate from update discovery. For integrity verification, compare the installed package with the fixed revision and file hashes recorded when that same version was approved. Do not compare it with `main` or the latest release. Treat a newer version as an update candidate, not as evidence of tampering, and audit it separately before installation.
+
+Treat the state as a possible integrity failure only when the installed package differs from the recorded hashes for the same version, or when the pinned reference can no longer be verified.
+
 ## Web research and prompt injection
 
 Theseus audits third-party skills before installation, but `SKILL.md` files are not the only place where prompt injection can appear. Instructions disguised as ordinary content can also enter through information an agent retrieves during web research.

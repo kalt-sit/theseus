@@ -60,6 +60,10 @@ Theseusをrepository内で管理している場合は、GitHub Actionsで定期�
 
 導入済みのTheseusだけに自身の安全性を判定させないでください。別に管理されたホスト側の仕組みから、固定した比較元との差分を確認します。
 
+整合性確認と更新確認は分けて扱ってください。整合性確認では、導入時に承認・記録した同じversionの固定revisionとfile hashを比較元にします。`main`や最新releaseとは比較しません。新しいversionが見つかった場合は、改ざんではなく更新候補として通知し、導入前に別途監査します。
+
+改ざんの可能性として扱うのは、導入済みpackageが同じversionの記録済みhashと一致しない場合、または固定した比較元を検証できない場合です。
+
 ## Webリサーチとprompt injection
 
 Theseusは第三者Skillを導入前に監査するSkillです。ただし、prompt injectionに注意すべきなのは`SKILL.md`だけではありません。AgentがWebリサーチで取得する情報にも、悪意のある指示が紛れ込む可能性があります。
