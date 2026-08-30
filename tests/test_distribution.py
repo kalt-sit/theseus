@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "skills" / "theseus"
-CURRENT_VERSION = "2.1.0"
+CURRENT_VERSION = "2.2.0"
 SKILLS_CLI_VERSION = "1.5.23"
 EXPECTED_FILES = {
     "LICENSE",
@@ -197,6 +197,115 @@ class DistributionContractTests(unittest.TestCase):
             "Do not transmit candidate content or non-public identifiers.",
             "Do not make any external request during offline package inspection.",
             "Stop after delivering the audit report.",
+        )
+        for phrase in required_phrases:
+            self.assertIn(phrase, content)
+
+    def test_core_contract_names_adversarial_unicode_families(self) -> None:
+        content = (PACKAGE / "SKILL.md").read_text(encoding="utf-8")
+        required_phrases = (
+            "Unicode default-ignorable characters",
+            "zero-width characters",
+            "variation selectors",
+            "Unicode Tags",
+            "bidirectional controls",
+            "mixed-script text",
+            "homoglyphs",
+            "Unicode normalization",
+            "whitespace steganography",
+            "escaped or multiply encoded representations",
+        )
+        for phrase in required_phrases:
+            self.assertIn(phrase, content)
+
+    def test_core_contract_requires_bounded_static_analysis(self) -> None:
+        content = (PACKAGE / "SKILL.md").read_text(encoding="utf-8")
+        required_phrases = (
+            "maximum input bytes",
+            "maximum output bytes",
+            "expansion ratio",
+            "decoding depth",
+            "time limit",
+            "UI or schema limits",
+            "runtime enforcement",
+            "candidate remains opaque",
+        )
+        for phrase in required_phrases:
+            self.assertIn(phrase, content)
+
+    def test_checklist_expands_the_effective_code_boundary(self) -> None:
+        content = (PACKAGE / "references/audit-checklist.md").read_text(encoding="utf-8")
+        required_phrases = (
+            "minified or packed files",
+            "generated bundles",
+            "source maps",
+            "remote imports",
+            "runtime-fetched code",
+            "build-time downloads",
+            "reproducible build",
+            "A clean pattern search does not make an opaque artifact inspectable.",
+        )
+        for phrase in required_phrases:
+            self.assertIn(phrase, content)
+
+    def test_checklist_requires_unicode_evidence_without_rewriting_input(self) -> None:
+        content = (PACKAGE / "references/audit-checklist.md").read_text(encoding="utf-8")
+        required_phrases = (
+            "default-ignorable",
+            "zero-width characters",
+            "variation selectors",
+            "Unicode Tags",
+            "bidirectional controls",
+            "mixed-script",
+            "Unicode normalization",
+            "spaces, tabs, and non-breaking spaces",
+            "literal code points and escaped forms",
+            "Preserve the original bytes",
+            "code point and byte offsets",
+        )
+        for phrase in required_phrases:
+            self.assertIn(phrase, content)
+
+    def test_checklist_requires_resource_guards_at_runtime_boundaries(self) -> None:
+        content = (PACKAGE / "references/audit-checklist.md").read_text(encoding="utf-8")
+        required_phrases = (
+            "maximum input bytes",
+            "maximum output bytes",
+            "expansion ratio",
+            "decoding depth",
+            "time limit",
+            "memory limit",
+            "schema metadata",
+            "actual runtime validation",
+            "malformed-input tests",
+            "unmatched delimiters",
+            "fail closed",
+        )
+        for phrase in required_phrases:
+            self.assertIn(phrase, content)
+
+    def test_checklist_covers_secret_lifecycle_and_metered_egress(self) -> None:
+        content = (PACKAGE / "references/audit-checklist.md").read_text(encoding="utf-8")
+        required_phrases = (
+            "credential caches",
+            "legacy storage keys",
+            "clear or logout paths",
+            "same-origin third-party scripts",
+            "metered APIs",
+            "request fan-out",
+            "timeouts and cancellation",
+        )
+        for phrase in required_phrases:
+            self.assertIn(phrase, content)
+
+    def test_checklist_prevents_copying_across_unclear_license_boundaries(self) -> None:
+        content = (PACKAGE / "references/audit-checklist.md").read_text(encoding="utf-8")
+        required_phrases = (
+            "conflicting license declarations",
+            "third-party notices",
+            "source code, prompts, tables, or generated artifacts",
+            "independent implementation from public standards",
+            "Treat extracted capability code as a new artifact",
         )
         for phrase in required_phrases:
             self.assertIn(phrase, content)

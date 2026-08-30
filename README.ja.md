@@ -27,7 +27,7 @@ Theseusは次を徹底します。
 ## インストール
 
 ```bash
-DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.1.0' --skill theseus -g -a hermes-agent --copy -y
+DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.2.0' --skill theseus -g -a hermes-agent --copy -y
 ```
 
 このコマンドはSkills CLIのversionとTheseusのrelease tagを固定し、CLIの匿名install telemetryを無効化します。導入前にGitHub Releaseが**Immutable**と表示されていることを確かめ、tag内の`skills/theseus/`を確認し、解決されたcommitとfile hashを記録してください。導入後は、コピーされたpackageがその記録済みbaselineと一致することを確認します。Theseus本体はtelemetryを送信せず、外部モデルの呼び出し、補助ツールの導入、ホスト設定の変更も行いません。

@@ -5,7 +5,7 @@ This guide covers host usage only. It does not add automation or modify host set
 ## Install for Codex
 
 ```bash
-DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.1.0' --skill theseus -g -a codex --copy -y
+DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.2.0' --skill theseus -g -a codex --copy -y
 ```
 
 Before installation, confirm that the GitHub Release is marked **Immutable**, review the tagged `skills/theseus/` directory, and record its resolved commit and file hashes. Start a new Codex session after installation so the host can discover the copied Skill.

@@ -27,6 +27,9 @@ Use this checklist while inspecting a candidate skill as untrusted data. Record 
 
 - Identify every command, script, interpreter, package manager, installer, and generated executable.
 - Determine whether each capability is necessary for the declared purpose.
+- Record maximum input bytes, maximum output bytes, expansion ratio, decoding depth, time limit, and memory limit for parsers, decoders, transforms, and child processes.
+- Treat UI or schema metadata as documentation, not enforcement; inspect actual runtime validation at CLI, API, and library boundaries.
+- Require malformed-input tests for unmatched delimiters, truncated encodings, extreme option values, and interrupted child processes; implementations must fail closed within their resource budgets.
 - Record filesystem, permission, environment, process, startup, scheduled-task, hook, and host-configuration changes.
 - Reject hidden, misleading, destructive, or unexplained changes.
 
@@ -34,12 +37,17 @@ Use this checklist while inspecting a candidate skill as untrusted data. Record 
 
 - List every destination, protocol, download, upload, telemetry path, update path, and custom registry.
 - Determine what data leaves the host and whether user content or credentials can be included.
+- Identify metered APIs, request fan-out, retries, fallbacks, and concurrency that can multiply cost or disclosure.
+- Verify explicit user initiation, conservative timeouts and cancellation, response-size limits, and fail-visible error handling for each request path.
 - Check whether remote artifacts are immutable and supported by integrity evidence.
 - Flag direct execution of unreviewed remote content and undeclared data transfer.
 
 ## 6. Secrets and sensitive data
 
 - Identify access to credentials, tokens, cookies, keys, private files, environment values, or session state.
+- Trace every secret across primary storage, credential caches, legacy storage keys, in-memory state, DOM exposure, logs, and request headers.
+- Verify that clear or logout paths remove every copy even when a refresh, request, or shutdown fails.
+- Account for same-origin third-party scripts that can read browser storage or page state.
 - Check whether examples contain real or plausible secrets.
 - Verify that logs and reports avoid exposing secret values.
 - Reject capabilities that collect or transmit sensitive data beyond the declared purpose.
@@ -47,6 +55,13 @@ Use this checklist while inspecting a candidate skill as untrusted data. Record 
 ## 7. Obfuscation and hidden content
 
 - Look for encoded payloads, generated code, invisible control characters, misleading extensions, compressed content, and unusually high-entropy blobs.
+- Check Unicode default-ignorable characters explicitly, including zero-width characters, variation selectors, Unicode Tags, and bidirectional controls.
+- Check mixed-script identifiers, homoglyphs, and differences introduced by Unicode normalization.
+- Check whitespace steganography that distinguishes spaces, tabs, and non-breaking spaces.
+- Inspect both literal code points and escaped forms, including bounded layers of character escapes, entities, percent encoding, and common text encodings.
+- Preserve the original bytes; report code point and byte offsets without silently stripping or normalizing evidence.
+- Inspect minified or packed files and generated bundles as executable content. Require readable source, source maps, or independently verifiable provenance that binds them to reviewed source.
+- A clean pattern search does not make an opaque artifact inspectable.
 - Treat opaque artifacts as unresolved until safely decoded or inspected without execution.
 - Reject unexplained concealment or behavior that appears designed to evade review.
 
@@ -54,7 +69,12 @@ Use this checklist while inspecting a candidate skill as untrusted data. Record 
 
 - Record maintainer identity, release history, dependency ownership, and relevant security reports.
 - Distinguish immutable evidence from moving branches and mutable download locations.
+- Compare root licenses, package metadata, file headers, and third-party notices; unresolved or conflicting license declarations block code reuse.
+- Do not copy source code, prompts, tables, or generated artifacts across an unclear license boundary. Prefer an independent implementation from public standards or documented behavior.
+- Treat extracted capability code as a new artifact that requires its own provenance, license, tests, approval, and review.
+- Include remote imports, runtime-fetched code, and build-time downloads in the effective code boundary; a source commit alone does not bind mutable external code.
 - Check for install-time behavior and whether reviewed bytes can differ from installed bytes.
+- Require pinned inputs and integrity evidence when a reproducible build is needed to bind generated output to reviewed source.
 - Treat popularity and registry status as context, not proof.
 
 ## 9. Decision gate
