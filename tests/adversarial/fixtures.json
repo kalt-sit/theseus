@@ -1,0 +1,126 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "origin": "independently-authored",
+    "coverage": "representative-not-exhaustive",
+    "basis": "Unicode code point properties and independently authored ASCII examples",
+    "payload_policy": "harmless-markers-only",
+    "copied_from_third_party": false,
+    "max_utf8_bytes_per_fixture": 256
+  },
+  "fixtures": [
+    {
+      "id": "clean_ascii_control",
+      "segments": [
+        {"text": "SAFE-FIXTURE-01"}
+      ],
+      "expected_findings": []
+    },
+    {
+      "id": "zero_width_insertion",
+      "segments": [
+        {"text": "SA"},
+        {"codepoints": ["200B"]},
+        {"text": "FE-FIXTURE-01"}
+      ],
+      "expected_findings": ["zero_width"]
+    },
+    {
+      "id": "variation_selector_pair",
+      "segments": [
+        {"text": "SAFE"},
+        {"codepoints": ["FE0E", "FE0F"]},
+        {"text": "-FIXTURE-01"}
+      ],
+      "expected_findings": ["variation_selector"]
+    },
+    {
+      "id": "unicode_tag_sequence",
+      "segments": [
+        {"text": "SAFE-FIXTURE-01"},
+        {"codepoints": ["E0073", "E0061", "E0066", "E0065", "E007F"]}
+      ],
+      "expected_findings": ["unicode_tag"]
+    },
+    {
+      "id": "bidi_isolate",
+      "segments": [
+        {"text": "SAFE"},
+        {"codepoints": ["2066"]},
+        {"text": "-FIXTURE-01"},
+        {"codepoints": ["2069"]}
+      ],
+      "expected_findings": ["bidi_control"]
+    },
+    {
+      "id": "mixed_script_homoglyph",
+      "segments": [
+        {"text": "S"},
+        {"codepoints": ["0410"]},
+        {"text": "FE-FIXTURE-01"}
+      ],
+      "expected_findings": ["mixed_script"]
+    },
+    {
+      "id": "combining_mark_burst",
+      "segments": [
+        {"text": "S"},
+        {"codepoints": ["0301", "0300", "0302", "0303", "0308", "0307"]},
+        {"text": "AFE-FIXTURE-01"}
+      ],
+      "expected_findings": ["normalization_difference", "combining_mark_burst"]
+    },
+    {
+      "id": "whitespace_bit_pattern",
+      "segments": [
+        {"codepoints": ["0020", "0009", "0020", "0009", "0020", "0020", "0009", "0009"]}
+      ],
+      "expected_findings": ["whitespace_steganography"]
+    },
+    {
+      "id": "escaped_zero_width",
+      "segments": [
+        {"text": "SAFE-FIXTURE-01\\u200B"}
+      ],
+      "expected_findings": ["escaped_invisible"]
+    },
+    {
+      "id": "percent_encoded_zero_width",
+      "segments": [
+        {"text": "SAFE-FIXTURE-01%E2%80%8B"}
+      ],
+      "expected_findings": ["percent_encoded_invisible"]
+    },
+    {
+      "id": "multiply_percent_encoded_zero_width",
+      "segments": [
+        {"text": "SAFE-FIXTURE-01%25E2%2580%258B"}
+      ],
+      "expected_findings": ["multiply_encoded_invisible"]
+    },
+    {
+      "id": "normalization_difference",
+      "segments": [
+        {"text": "SAFE-FIXTURE-01-e"},
+        {"codepoints": ["0301"]}
+      ],
+      "expected_findings": ["normalization_difference"]
+    },
+    {
+      "id": "nbsp_whitespace_pattern",
+      "segments": [
+        {"codepoints": ["0020", "00A0", "0020", "00A0", "0020", "0020", "00A0", "00A0"]}
+      ],
+      "expected_findings": ["whitespace_steganography"]
+    },
+    {
+      "id": "additional_default_ignorable",
+      "segments": [
+        {"text": "SAFE"},
+        {"codepoints": ["2063"]},
+        {"text": "-FIXTURE-01"}
+      ],
+      "expected_findings": ["zero_width"]
+    }
+  ]
+}
