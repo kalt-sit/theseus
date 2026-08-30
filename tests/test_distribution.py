@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "skills" / "theseus"
-CURRENT_VERSION = "2.1.0"
+CURRENT_VERSION = "2.2.0"
 SKILLS_CLI_VERSION = "1.5.23"
 EXPECTED_FILES = {
     "LICENSE",

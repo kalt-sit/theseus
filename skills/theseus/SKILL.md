@@ -5,7 +5,7 @@ license: MIT
 compatibility: Core guidance works with Agent Skills hosts; no network access or code execution is required.
 metadata:
   author: "kalt-sit"
-  version: "2.1.0"
+  version: "2.2.0"
 ---
 
 # Theseus

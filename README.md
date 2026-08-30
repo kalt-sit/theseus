@@ -25,7 +25,7 @@ Agent skills combine natural-language instructions with scripts and resources. R
 ## Install
 
 ```bash
-DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.1.0' --skill theseus -g -a hermes-agent --copy -y
+DISABLE_TELEMETRY=1 npx skills@1.5.23 add 'kalt-sit/theseus#v2.2.0' --skill theseus -g -a hermes-agent --copy -y
 ```
 
 The command pins both the Skills CLI and the Theseus release tag, and disables the CLI's anonymous install telemetry. Before installation, confirm that the GitHub Release is marked **Immutable**, review the tagged `skills/theseus/` package, and record its resolved commit and file hashes. Afterward, confirm that the copied package matches that recorded baseline. Theseus itself does not send telemetry, call an external model, install helper tools, or modify host configuration.
