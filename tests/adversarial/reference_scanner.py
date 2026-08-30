@@ -121,12 +121,13 @@ def _looks_like_whitespace_steganography(text: str) -> bool:
     )
 
 
-def _decode_percent_layer(text: str) -> tuple[str, bool]:
+def _decode_percent_layer(text: str) -> tuple[str, bool, bool]:
     input_bytes = _bounded_utf8_size(text, MAX_DECODED_BYTES, "percent復号入力")
     changed = False
+    introduced_invisible = False
 
     def replace_run(match: re.Match[str]) -> str:
-        nonlocal changed
+        nonlocal changed, introduced_invisible
         encoded_bytes = bytes.fromhex(match.group().replace("%", ""))
         try:
             decoded = encoded_bytes.decode("utf-8")
@@ -135,6 +136,8 @@ def _decode_percent_layer(text: str) -> tuple[str, bool]:
                 f"percent encodingがUTF-8として不正: index {match.start()}"
             ) from error
         changed = True
+        if any(_is_suspicious_invisible(ord(character)) for character in decoded):
+            introduced_invisible = True
         return decoded
 
     decoded_text = _PERCENT_BYTE_RUN.sub(replace_run, text)
@@ -143,21 +146,24 @@ def _decode_percent_layer(text: str) -> tuple[str, bool]:
         raise InputBudgetExceeded(
             f"percent復号の展開率が上限を超過: > {MAX_DECODE_EXPANSION_RATIO}"
         )
-    return decoded_text, changed
+    return decoded_text, changed, introduced_invisible
 
 
 def _percent_encoding_finding(text: str) -> str | None:
     current = text
+    finding_depth: int | None = None
     for depth in range(1, MAX_DECODE_DEPTH + 1):
-        current, changed = _decode_percent_layer(current)
+        current, changed, introduced_invisible = _decode_percent_layer(current)
         if not changed:
-            return None
-        if any(_is_suspicious_invisible(ord(character)) for character in current):
-            if depth == 1:
-                return "percent_encoded_invisible"
-            return "multiply_encoded_invisible"
+            break
+        if introduced_invisible and finding_depth is None:
+            finding_depth = depth
     if _PERCENT_BYTE_RUN.search(current):
         raise DecodeDepthExceeded(f"percent encodingが深度{MAX_DECODE_DEPTH}で未解決")
+    if finding_depth == 1:
+        return "percent_encoded_invisible"
+    if finding_depth is not None:
+        return "multiply_encoded_invisible"
     return None
 
 

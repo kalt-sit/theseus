@@ -251,6 +251,17 @@ class AdversarialFixtureContractTests(unittest.TestCase):
                 with self.assertRaises(scanner.MalformedEncoding):
                     scanner.scan_text(malformed_encoding)
 
+    def test_reference_scanner_attributes_only_percent_introduced_invisibles(self) -> None:
+        scanner = self.load_reference_scanner()
+        direct_invisible_with_benign_encoding = (
+            "SAFE" + chr(0x200B) + "-FIXTURE-01%41"
+        )
+
+        self.assertEqual(
+            scanner.scan_text(direct_invisible_with_benign_encoding),
+            ["zero_width"],
+        )
+
     def test_reference_scanner_bounds_multiply_encoded_percent_sequences(self) -> None:
         scanner = self.load_reference_scanner()
 
@@ -262,6 +273,8 @@ class AdversarialFixtureContractTests(unittest.TestCase):
         )
         with self.assertRaises(scanner.DecodeDepthExceeded):
             scanner.scan_text("SAFE-FIXTURE-01%2525E2%252580%25258B")
+        with self.assertRaises(scanner.DecodeDepthExceeded):
+            scanner.scan_text("SAFE%E2%80%8B-FIXTURE-%252541")
 
     def test_reference_scanner_enforces_the_utf8_input_budget(self) -> None:
         scanner = self.load_reference_scanner()
